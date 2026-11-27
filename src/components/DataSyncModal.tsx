@@ -40,7 +40,11 @@ export function DataSyncModal({
 }: DataSyncModalProps) {
   const [activeTab, setActiveTab] = useState<SyncTab>('ai-json');
   const [modelQuery, setModelQuery] = useState('');
+  const [customPrompt, setCustomPrompt] = useState<string | null>(null);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
+
+  const defaultPrompt = useMemo(() => buildResearchPrompt(modelQuery), [modelQuery]);
+  const activePrompt = customPrompt ?? defaultPrompt;
 
   const [jsonInput, setJsonInput] = useState('');
   const [jsonMode, setJsonMode] = useState<'merge' | 'replace'>('merge');
@@ -63,8 +67,7 @@ export function DataSyncModal({
   };
 
   const handleCopyPrompt = async () => {
-    const prompt = buildResearchPrompt(modelQuery);
-    const ok = await copyText(prompt);
+    const ok = await copyText(activePrompt);
     if (ok) {
       setCopiedPrompt(true);
       onNotify('AI research prompt copied to clipboard.');
@@ -199,7 +202,10 @@ export function DataSyncModal({
                   <input
                     type="text"
                     value={modelQuery}
-                    onChange={(e) => setModelQuery(e.target.value)}
+                    onChange={(e) => {
+                      setModelQuery(e.target.value);
+                      if (customPrompt !== null) setCustomPrompt(null);
+                    }}
                     placeholder="e.g. Toyota Corolla Touring Sports 2.0 Hybrid, ~2021"
                     aria-label="Vehicle model to research"
                     className="flex-1 px-3 py-2 text-sm bg-white border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#1E40AF]"
@@ -224,12 +230,36 @@ export function DataSyncModal({
                 </div>
 
                 <details className="text-xs">
-                  <summary className="text-slate-600 hover:text-[#1E40AF] font-medium cursor-pointer select-none">
-                    Preview generated prompt
+                  <summary className="text-slate-600 hover:text-[#1E40AF] font-medium cursor-pointer select-none flex items-center justify-between">
+                    <span>
+                      Preview &amp; edit prompt
+                      {customPrompt !== null && (
+                        <span className="ml-1.5 text-[11px] font-semibold text-[#1E40AF]">
+                          (customized)
+                        </span>
+                      )}
+                    </span>
                   </summary>
-                  <pre className="mt-2 p-3 rounded-lg bg-white border border-[#E2E8F0] text-[11px] text-slate-700 whitespace-pre-wrap overflow-x-auto max-h-48 overflow-y-auto">
-                    {buildResearchPrompt(modelQuery)}
-                  </pre>
+                  <div className="mt-2 space-y-2">
+                    <textarea
+                      rows={10}
+                      value={activePrompt}
+                      onChange={(e) => setCustomPrompt(e.target.value)}
+                      aria-label="Editable AI research prompt"
+                      className="w-full p-3 font-mono text-[11px] leading-relaxed bg-white border border-[#E2E8F0] rounded-lg text-slate-700 focus:outline-none focus:border-[#1E40AF]"
+                    />
+                    {customPrompt !== null && (
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setCustomPrompt(null)}
+                          className="text-xs font-medium text-[#1E40AF] hover:text-[#1E3A8A] cursor-pointer"
+                        >
+                          Reset to default prompt
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </details>
               </div>
 
