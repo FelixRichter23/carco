@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color-scheme: light;
+  }
+
+  body {
+    background-color: #F8F9FA;
+    color: #0F172A;
+    margin: 0;
+  }
+}
+
+/* Native <dialog> modal scroll containment & backdrop styling */
+dialog:modal {
+  overscroll-behavior: contain;
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100dvh - 2rem);
+  overflow: visible;
+}
+
+dialog::backdrop {
+  background-color: rgba(15, 23, 42, 0.52);
+  backdrop-filter: blur(2px);
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+/* Post-interaction form validation feedback (:user-invalid with fallback) */
+.field-input:is(:user-invalid, .user-invalid-fallback) {
+  border-color: #DC2626;
+  background-color: #FEF2F2;
+}
+
+.field-input:is(:user-invalid, .user-invalid-fallback) + .field-error {
+  display: flex;
+}
+
+.field-error {
+  display: none;
+}
+
+/* Interest-triggered & click-triggered toggletip popover positioning */
+[popover].formula-toggletip {
+  border: 1px solid #E2E8F0;
+  border-radius: 0.75rem;
+  background: #FFFFFF;
+  color: #0F172A;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.14);
+  padding: 1rem;
+  max-width: min(24rem, calc(100vw - 2rem));
+}
+
+@supports (position-area: block-end) {
+  [popover].formula-toggletip {
+    inset: auto;
+    margin: 0.5rem 0 0 0;
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+}
+
+[interestfor] {
+  --interest-delay-start: 0.15s;
+  interest-delay-start: var(--interest-delay-start);
+  --interest-delay-end: 0.1s;
+  interest-delay-end: var(--interest-delay-end);
+}
+
+/* Responsive comparison table with sticky column and row headers */
+.comparison-table-wrapper {
+  overflow: auto;
+  max-inline-size: 100%;
+  max-block-size: min(68vh, 640px);
+  container-type: inline-size;
+  border: 1px solid #E2E8F0;
+  border-radius: 0.75rem;
+  background: #FFFFFF;
+}
+
+.comparison-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.comparison-table thead {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+}
+
+.comparison-table tbody th {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 1;
+  background: #F8FAFC;
+}
+
+.comparison-table thead th:first-child {
+  position: sticky;
+  inset-inline-start: 0;
+  z-index: 3;
+  background: #F8FAFC;
+}
+
+@container (width < 580px) {
+  .comparison-table th,
+  .comparison-table td {
+    padding-inline: 0.625rem;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Visually hidden utility for screen-reader live regions */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
