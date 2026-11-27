@@ -148,7 +148,7 @@ export function ComparisonModal({
                 <tr className="border-b border-[#E2E8F0]">
                   <th
                     scope="col"
-                    className="w-44 min-w-[160px] p-3.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-r border-[#E2E8F0]"
+                    className="w-44 min-w-[160px] px-3.5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 border-b border-r border-[#E2E8F0]"
                   >
                     Metric
                   </th>
@@ -156,15 +156,8 @@ export function ComparisonModal({
                     <th
                       key={car.id}
                       scope="col"
-                      className="min-w-[200px] p-3.5 text-left align-top bg-white border-b border-r last:border-r-0 border-[#E2E8F0]"
+                      className="min-w-[200px] px-3.5 py-2.5 text-left align-middle bg-white border-b border-r last:border-r-0 border-[#E2E8F0]"
                     >
-                      <div className="aspect-[16/10] w-full rounded-lg overflow-hidden bg-slate-100 border border-[#E2E8F0] mb-2.5">
-                        <CarImage
-                          src={car.images[0]}
-                          alt={car.brandModel}
-                          className="w-full h-full"
-                        />
-                      </div>
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <div className="font-semibold text-[#0F172A] leading-snug">
@@ -190,6 +183,32 @@ export function ComparisonModal({
                           />
                         </button>
                       </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-[#E2E8F0]">
+                {/* Scrolling Photo & Quick Actions Row */}
+                <tr>
+                  <th
+                    scope="row"
+                    className="p-3 text-left text-xs font-medium text-slate-600 align-top border-r border-[#E2E8F0]"
+                  >
+                    Photo
+                  </th>
+                  {cars.map((car) => (
+                    <td
+                      key={car.id}
+                      className="p-3 align-top border-r last:border-r-0 border-[#E2E8F0]"
+                    >
+                      <div className="aspect-[16/10] w-full rounded-lg overflow-hidden bg-slate-100 border border-[#E2E8F0]">
+                        <CarImage
+                          src={car.images[0]}
+                          alt={car.brandModel}
+                          className="w-full h-full"
+                        />
+                      </div>
                       <div className="mt-2 flex items-center gap-1.5">
                         <button
                           type="button"
@@ -211,12 +230,10 @@ export function ComparisonModal({
                           Edit
                         </button>
                       </div>
-                    </th>
+                    </td>
                   ))}
                 </tr>
-              </thead>
 
-              <tbody className="divide-y divide-[#E2E8F0]">
                 {/* Overall Star Rating */}
                 <tr>
                   <th
